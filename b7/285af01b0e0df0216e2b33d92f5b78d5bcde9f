@@ -1,0 +1,309 @@
+docs/identity-provider.md
+  s_7c7374962b1aea::t_01207d361b61ea 11,32-73,97
+  s_7c7374962b1aea::t_133ade797ce1cc 8-10
+  s_7c7374962b1aea::t_19a9c7e3eb79db 12-14,29-31
+  s_7c7374962b1aea::t_5bbe86cdd07c7c 74-76,94-96
+  s_7c7374962b1aea::t_dedc08de19d70a 98-100
+chart/headless-fleet-portal/examples/values-entra.yaml
+  s_7c7374962b1aea::t_35e652b9406f15 41-44
+  s_7c7374962b1aea::t_082116a47b0316 1-2
+  s_7c7374962b1aea::t_4da197c60a0551 3-5,38-40
+  s_7c7374962b1aea::t_2b155238df636d 45
+docs/langsmith.md
+  s_7c7374962b1aea::t_28709c4aabff6d 8
+  s_7c7374962b1aea::t_ce71cf6373ea05 25-64
+  s_7c7374962b1aea::t_9884b47875f584 5-7
+  s_7c7374962b1aea::t_b17812b961c355 9-11,22-24
+  s_7c7374962b1aea::t_b4b671ca95467e 65-67
+chart/headless-fleet-portal/examples/values-keycloak.yaml
+  s_7c7374962b1aea::t_c795e3eefb71fe 39-43
+  s_7c7374962b1aea::t_33f8658f2c0cd9 2-3
+  s_7c7374962b1aea::t_ef1f5eabd8f531 1
+  s_7c7374962b1aea::t_84724e31022513 4-6,36-38
+chart/headless-fleet-portal/values.yaml
+  s_7c7374962b1aea::t_763b2859144838 69-75
+  s_7c7374962b1aea::t_c8642dfa28724e 7-9
+  s_7c7374962b1aea::t_4c609fef534e7d 4-6
+  s_7c7374962b1aea::t_2a29a88f87d369 10-12,66-68
+  s_7c7374962b1aea::t_4c25d43cffa129 76-78
+portal/lib/config.ts
+  s_7c7374962b1aea::t_40797c464fa1ba 124
+  s_7c7374962b1aea::t_e952c17a81800c 121-123
+  s_7c7374962b1aea::t_753222efce966d 125-127
+chart/headless-fleet-portal/examples/values-okta.yaml
+  s_7c7374962b1aea::t_b015d80382c1d7 31
+  s_7c7374962b1aea::t_0bd698f9742048 1-2
+  s_7c7374962b1aea::t_3e69a48278c946 39-43
+  s_7c7374962b1aea::t_95b68f4e707813 3-5,28-30
+  s_7c7374962b1aea::t_00c42c30e5dbc5 32-34,36-38
+docs/troubleshooting.md
+  s_7c7374962b1aea::t_ca534669b175b3 16
+  s_7c7374962b1aea::t_6451d76a0f41fb 13-15
+  s_7c7374962b1aea::t_b36003cd977417 17-19
+README.md
+  s_7c7374962b1aea::t_05a8800b10113f 111-112
+  s_7c7374962b1aea::t_152918e3dd417b 56
+  s_7c7374962b1aea::t_359d20925c8246 3-55,57-97,101-110,113-353
+  s_7c7374962b1aea::t_5f4bcc58fc75d4 359-362
+  s_7c7374962b1aea::t_76cc8d169fdf51 98
+  s_7c7374962b1aea::t_6ed22fb46418ea 1-2
+  s_7c7374962b1aea::t_45a56ce0bcdb73 99-100
+  s_7c7374962b1aea::t_198e987c854d0c 354-358
+  s_7c7374962b1aea::t_535743305e22f6 363-365
+LICENSE
+  s_7c7374962b1aea::t_43b09664f5ed26 1-21
+chart/headless-fleet-portal/.helmignore
+  s_7c7374962b1aea::t_8d456f45649d88 1-5
+chart/headless-fleet-portal/Chart.yaml
+  s_7c7374962b1aea::t_bbbe356d4ccdd8 1-8
+chart/headless-fleet-portal/templates/NOTES.txt
+  s_7c7374962b1aea::t_368c456e933e8c 1-30
+chart/headless-fleet-portal/templates/configmap.yaml
+  s_7c7374962b1aea::t_084075c8c1ebc1 1-28
+chart/headless-fleet-portal/templates/deployment.yaml
+  s_7c7374962b1aea::t_7470dfab3d38b4 1-113
+chart/headless-fleet-portal/templates/httproute.yaml
+  s_7c7374962b1aea::t_307b374f733bff 1-21
+chart/headless-fleet-portal/templates/ingress.yaml
+  s_7c7374962b1aea::t_ab84a93d448058 1-33
+chart/headless-fleet-portal/templates/service.yaml
+  s_7c7374962b1aea::t_af351404189a22 1-15
+chart/headless-fleet-portal/templates/serviceaccount.yaml
+  s_7c7374962b1aea::t_64c16e83d46066 1-13
+chart/headless-fleet-portal/templates/tests/preflight.yaml
+  s_7c7374962b1aea::t_a792d4454db49f 1-59
+chart/headless-fleet-portal/values.schema.json
+  s_7c7374962b1aea::t_4445bcc382b595 1-244
+docs/governance.md
+  s_7c7374962b1aea::t_58956eaf94120d 1-140
+examples/mcp-whoami/realm.json
+  s_7c7374962b1aea::t_6bacdfc58e710b 1-83
+examples/mcp-whoami/server/Dockerfile
+  s_7c7374962b1aea::t_6e40bc93fb1296 1-9
+examples/mcp-whoami/server/requirements.txt
+  s_7c7374962b1aea::t_5d1d129360222e 1-3
+examples/mcp-whoami/server/server.py
+  s_7c7374962b1aea::t_ba47afc51cb391 1-83
+examples/mcp-whoami/smoke-job.yaml
+  s_7c7374962b1aea::t_0049c12f401b9e 1-43
+portal/.dockerignore
+  s_7c7374962b1aea::t_d62cab5b578520 1-8
+portal/.env.local.example
+  s_7c7374962b1aea::t_15d4e60a7a4699 1-67
+portal/AGENTS.md
+  s_7c7374962b1aea::t_43c06f3bad096d 1-9
+portal/Dockerfile
+  s_7c7374962b1aea::t_13cd441dbf792f 1-38
+portal/app/actions.ts
+  s_7c7374962b1aea::t_58a0247cee09a7 1-24
+portal/app/agents/[agentId]/page.tsx
+  s_7c7374962b1aea::t_76154e96bd794f 1-195
+portal/app/api/activity/route.ts
+  s_7c7374962b1aea::t_e5bf37efd3b8e0 1-14
+portal/app/api/agents/[id]/archive/route.ts
+  s_7c7374962b1aea::t_c1226c6fda075e 1-7
+portal/app/api/agents/[id]/bind/route.ts
+  s_7c7374962b1aea::t_7412265cc501fe 1-15
+portal/app/api/agents/[id]/clone/route.ts
+  s_7c7374962b1aea::t_8374c4aa5040cf 1-12
+portal/app/api/agents/[id]/computer-access/route.ts
+  s_7c7374962b1aea::t_b4e3e81fca3c2d 1-11
+portal/app/api/agents/[id]/permissions/route.ts
+  s_7c7374962b1aea::t_fca4f75cbc17d5 1-8
+portal/app/api/agents/[id]/readiness/route.ts
+  s_7c7374962b1aea::t_e256f0b16db5d2 1-17
+portal/app/api/agents/[id]/route.ts
+  s_7c7374962b1aea::t_5c79a520b396d0 1-32
+portal/app/api/agents/[id]/skills/[handle]/route.ts
+  s_7c7374962b1aea::t_9828794d250e06 1-6
+portal/app/api/agents/[id]/skills/route.ts
+  s_7c7374962b1aea::t_cb9778e860bc9d 1-11
+portal/app/api/agents/[id]/subagents/[name]/route.ts
+  s_7c7374962b1aea::t_5cce78c21ca821 1-6
+portal/app/api/agents/[id]/subagents/route.ts
+  s_7c7374962b1aea::t_da12ad3f04772c 1-8
+portal/app/api/agents/[id]/threads/route.ts
+  s_7c7374962b1aea::t_e3ed18c723bbbf 1-22
+portal/app/api/agents/route.ts
+  s_7c7374962b1aea::t_2edf29a4a2b93f 1-26
+portal/app/api/auth/[...nextauth]/route.ts
+  s_7c7374962b1aea::t_85bd3fe6b49318 1-3
+portal/app/api/catalog/route.ts
+  s_7c7374962b1aea::t_539a2ae1407124 1-39
+portal/app/api/computer-access/route.ts
+  s_7c7374962b1aea::t_eb3d61226a4d48 1-12
+portal/app/api/connect/[sid]/route.ts
+  s_7c7374962b1aea::t_6495a62eea243a 1-9
+portal/app/api/connect/route.ts
+  s_7c7374962b1aea::t_374a4dd9546bea 1-20
+portal/app/api/connections/route.ts
+  s_7c7374962b1aea::t_dabb6ef67fc708 1-7
+portal/app/api/health/route.ts
+  s_7c7374962b1aea::t_7343ee1d044537 1-10
+portal/app/api/inbox/route.ts
+  s_7c7374962b1aea::t_e618bcf6d46d1a 1-10
+portal/app/api/me/route.ts
+  s_7c7374962b1aea::t_da1024f792104e 1-19
+portal/app/api/sandboxes/[slug]/content/route.ts
+  s_7c7374962b1aea::t_7897cf2d8a2c21 1-19
+portal/app/api/sandboxes/[slug]/files/route.ts
+  s_7c7374962b1aea::t_7b1fe21d07bb04 1-9
+portal/app/api/skills/[handle]/route.ts
+  s_7c7374962b1aea::t_96328b6df32f6d 1-11
+portal/app/api/skills/[handle]/usage/route.ts
+  s_7c7374962b1aea::t_2f93f517b6f609 1-7
+portal/app/api/skills/route.ts
+  s_7c7374962b1aea::t_b07b12eacea9f4 1-53
+portal/app/api/threads/[tid]/messages/route.ts
+  s_7c7374962b1aea::t_b1b2284e531f27 1-18
+portal/app/api/threads/[tid]/resume/route.ts
+  s_7c7374962b1aea::t_8b2059fdb9225d 1-22
+portal/app/api/threads/[tid]/route.ts
+  s_7c7374962b1aea::t_b9f89d6d08f273 1-5
+portal/app/api/tool-catalog/route.ts
+  s_7c7374962b1aea::t_128505b2bf797a 1-5
+portal/app/api/users/route.ts
+  s_7c7374962b1aea::t_9479758a040dd1 1-32
+portal/app/api/workspace/route.ts
+  s_7c7374962b1aea::t_ecd115287edf20 1-18
+portal/app/globals.css
+  s_7c7374962b1aea::t_04cedca24cc04f 1-160
+portal/app/layout.tsx
+  s_7c7374962b1aea::t_9069cfd40ec651 1-47
+portal/app/login/page.tsx
+  s_7c7374962b1aea::t_8dc5bcf362418c 1-115
+portal/app/page.tsx
+  s_7c7374962b1aea::t_86467c1865172f 1-124
+portal/app/publish/[agentId]/page.tsx
+  s_7c7374962b1aea::t_83609a8700062d 1-308
+portal/app/publish/page.tsx
+  s_7c7374962b1aea::t_8721c4971bce42 1-64
+portal/app/studio/[agentId]/page.tsx
+  s_7c7374962b1aea::t_db78b5564e4007 1-201
+portal/app/studio/new/page.tsx
+  s_7c7374962b1aea::t_8b86febf58a37f 1-231
+portal/app/studio/page.tsx
+  s_7c7374962b1aea::t_17fecc57c7c3e1 1-99
+portal/app/studio/skills/page.tsx
+  s_7c7374962b1aea::t_c9434c28b81cb0 1-130
+portal/auth.ts
+  s_7c7374962b1aea::t_cac1c8f5306c8c 1-176
+portal/components/activity-drawer.tsx
+  s_7c7374962b1aea::t_6e668ffcc52e90 1-189
+portal/components/agent-card.tsx
+  s_7c7374962b1aea::t_9344fe195b0bf5 1-48
+portal/components/app-bar.tsx
+  s_7c7374962b1aea::t_95ac1aeea66eb8 1-116
+portal/components/approval-gate.tsx
+  s_7c7374962b1aea::t_0fe7b3811c6a60 1-70
+portal/components/auth-gate.tsx
+  s_7c7374962b1aea::t_ff820898a7ea56 1-67
+portal/components/build/catalog-panel.tsx
+  s_7c7374962b1aea::t_937ffb3dd774b1 1-431
+portal/components/build/delete-skill-dialog.tsx
+  s_7c7374962b1aea::t_0b4cee7c39a188 1-160
+portal/components/build/new-skill-dialog.tsx
+  s_7c7374962b1aea::t_d0ce2337b14702 1-383
+portal/components/chat-panel.tsx
+  s_7c7374962b1aea::t_0402ee71a30148 1-112
+portal/components/connection-gate.tsx
+  s_7c7374962b1aea::t_1a1d209fadb1e0 1-186
+portal/components/error-note.tsx
+  s_7c7374962b1aea::t_83f967676b83dc 1-39
+portal/components/files-drawer.tsx
+  s_7c7374962b1aea::t_fabc795a07aa16 1-75
+portal/components/markdown-prose.tsx
+  s_7c7374962b1aea::t_72ea10cba42d46 1-77
+portal/components/rail/RailEditor.tsx
+  s_7c7374962b1aea::t_8376cc4187f281 1-143
+portal/components/rail/ToolPicker.tsx
+  s_7c7374962b1aea::t_265534c0f815a4 1-436
+portal/components/rail/sections/backend.tsx
+  s_7c7374962b1aea::t_960669bbc31fc0 1-149
+portal/components/rail/sections/instructions.tsx
+  s_7c7374962b1aea::t_9949b1d97d5f15 1-49
+portal/components/rail/sections/skills.tsx
+  s_7c7374962b1aea::t_f8b213335d847d 1-152
+portal/components/rail/sections/subagents.tsx
+  s_7c7374962b1aea::t_8b22045761596d 1-139
+portal/components/rail/sections/tools.tsx
+  s_7c7374962b1aea::t_b0d5fb9453b03c 1-120
+portal/components/shell.tsx
+  s_7c7374962b1aea::t_9f16b7b8c152fc 1-67
+portal/components/theme-provider.tsx
+  s_7c7374962b1aea::t_e7f73a41a49ad8 1-11
+portal/components/theme-toggle.tsx
+  s_7c7374962b1aea::t_b0ee66d72186f0 1-25
+portal/components/thread-list.tsx
+  s_7c7374962b1aea::t_11bdb0ff32ea3d 1-91
+portal/components/todo-panel.tsx
+  s_7c7374962b1aea::t_dc269c755ccd4f 1-72
+portal/components/transcript.tsx
+  s_7c7374962b1aea::t_159180c63b709f 1-121
+portal/components/ui.tsx
+  s_7c7374962b1aea::t_ae91ef8632dccb 1-213
+portal/lib/api.ts
+  s_7c7374962b1aea::t_296bebcbd90980 1-255
+portal/lib/fleet/computer-access.ts
+  s_7c7374962b1aea::t_5bf1b65790f684 1-226
+portal/lib/fleet/core.ts
+  s_7c7374962b1aea::t_130f116fa0a908 1-422
+portal/lib/fleet/ops.ts
+  s_7c7374962b1aea::t_2db51c6fb23045 1-650
+portal/lib/fleet/readiness.ts
+  s_7c7374962b1aea::t_a3987a99044f88 1-157
+portal/lib/fleet/schemas.ts
+  s_7c7374962b1aea::t_e271c8bd481655 1-75
+portal/lib/fleet/server.ts
+  s_7c7374962b1aea::t_95d37f339c0790 1-259
+portal/lib/fleet/sse.ts
+  s_7c7374962b1aea::t_408314c73e3468 1-132
+portal/lib/humanize.ts
+  s_7c7374962b1aea::t_30e04913da5050 1-56
+portal/lib/skills/bundle.ts
+  s_7c7374962b1aea::t_d031cbc2dd7993 1-179
+portal/lib/skills/frontmatter.ts
+  s_7c7374962b1aea::t_9e23852e6715ee 1-87
+portal/lib/skills/rules.ts
+  s_7c7374962b1aea::t_adf32cc008757c 1-104
+portal/lib/skills/zip.ts
+  s_7c7374962b1aea::t_b69cbaa1150840 1-137
+portal/lib/subagent-presets.json
+  s_7c7374962b1aea::t_4f3e82ec0fa4b0 1-26
+portal/lib/types.ts
+  s_7c7374962b1aea::t_58eb43aa073663 1-217
+portal/lib/use-chat.ts
+  s_7c7374962b1aea::t_9d755ed076b13e 1-141
+portal/lib/use-connect.ts
+  s_7c7374962b1aea::t_d5c8b8fb61b1d4 1-116
+portal/next.config.ts
+  s_7c7374962b1aea::t_eb4844db87caaa 1-8
+portal/package-lock.json
+  s_7c7374962b1aea::t_18f14f3611a9d1 1-3860
+portal/package.json
+  s_7c7374962b1aea::t_7c44ec3d04b01b 1-32
+portal/postcss.config.mjs
+  s_7c7374962b1aea::t_a88d057045f6e7 1
+portal/proxy.ts
+  s_7c7374962b1aea::t_56f286de493b18 1-7
+portal/scripts/smoke.ts
+  s_7c7374962b1aea::t_52300ac506e206 1-302
+portal/tsconfig.json
+  s_7c7374962b1aea::t_4760a936f8087e 1-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b7285af01b0e0df0216e2b33d92f5b78d5bcde9f",
+  "prompts": {},
+  "sessions": {
+    "s_7c7374962b1aea": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f32dcd54-55c3-4942-a3bf-c335b0e08022",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "haithamshahin333 <42976403+haithamshahin333@users.noreply.github.com>"
+    }
+  }
+}
