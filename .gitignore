@@ -1,0 +1,21 @@
+# Local settings hold real secrets: never commit them.
+.env
+.env.*
+!.env.local.example
+my-values*.yaml
+
+# Next.js build output. next dev and next build write next-env.d.ts again.
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+
+# Python (examples/mcp-whoami)
+__pycache__/
+*.py[cod]
+.venv/
+
+# Packaged charts (helm package)
+*.tgz
+
+.DS_Store

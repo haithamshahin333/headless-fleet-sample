@@ -1,0 +1,92 @@
+# Helm values to MERGE into your self-hosted LangSmith release (chart 0.17 or later) so the
+# portal can call Fleet as each signed-in person. This is a delta, not a full values file.
+#
+# Replace every <…>. Three values must equal the portal's chart values exactly:
+#
+#   here                                     portal chart (my-values.yaml)
+#   FLEET_EXTERNAL_AUTH_OIDC_ISSUER_URL  ==  oidc.issuer        (byte for byte, watch trailing slashes)
+#   FLEET_EXTERNAL_AUTH_OIDC_AUDIENCE    ==  oidc.audience
+#   FLEET_EXTERNAL_AUTH_OIDC_SUBJECT_CLAIM == oidc.subjectClaim
+#
+# !! Helm REPLACES lists, it does not merge them. If your release already sets
+# !! platformBackend.deployment.extraEnv, copy your existing entries into the list below.
+#
+# How it works: the portal sends each person's own access token from your identity provider.
+# platform-backend checks iss (exact), aud (the token's aud must contain this value), exp,
+# nbf and the signature (RSA, RSA-PSS, ECDSA or EdDSA; never HMAC) against the issuer's
+# JWKS, then finds the LangSmith user whose stored subject equals the token's subject claim.
+# It never creates users: someone LangSmith has not set up gets a 403 (docs/langsmith.md).
+# These principals are ordinary users, so RBAC, ABAC, access levels and thread scoping
+# apply per person. No shared secret is involved: a leaked token acts as one person until
+# it expires.
+
+# ── Fleet ─────────────────────────────────────────────────────────────────────────
+fleet:
+  enabled: true
+  # encryptionKey: <Fernet key>     # required when Fleet is enabled (or set it in your existing secret)
+fleetToolServer:
+  enabled: true
+fleetTriggerServer:
+  enabled: true
+hostBackend:
+  enabled: true                     # OAuth tool connections ("Connect" in the portal)
+  # Only for an MCP server or OAuth provider on a private IP address (docs/mcp-servers.md#private-networks):
+  # deployment:
+  #   extraEnv:
+  #     - name: SSRF_ALLOW_PRIVATE_IPS_MCP_SERVERS
+  #       value: "true"
+# config:
+#   langsmithLicenseKey: <Enterprise license with the Fleet entitlement>
+
+# ── Per-user sign-in for Fleet (OIDC bearer) ──────────────────────────────────────
+platformBackend:
+  deployment:
+    extraEnv:
+      - name: FLEET_EXTERNAL_AUTH_OIDC_ENABLED
+        value: "true"
+      # The default, and the value tested on LangSmith 0.17. Keep it.
+      - name: FLEET_EXTERNAL_AUTH_PROVIDER
+        value: "custom-oidc"
+      # Your identity provider's issuer, exactly as in its discovery document.
+      #   Entra ID: https://login.microsoftonline.com/<tenant-id>/v2.0
+      - name: FLEET_EXTERNAL_AUTH_OIDC_ISSUER_URL
+        value: "<ISSUER>"
+      # One string. Entra ID: the client ID of LangSmith's own app registration (v2 tokens).
+      - name: FLEET_EXTERNAL_AUTH_OIDC_AUDIENCE
+        value: "<AUDIENCE>"
+      # The claim that holds the id LangSmith stored for the user at SSO login.
+      # Entra ID: oid (Entra's sub differs per app). Most others: sub.
+      - name: FLEET_EXTERNAL_AUTH_OIDC_SUBJECT_CLAIM
+        value: "<SUBJECT_CLAIM>"
+      # Not sign-in, but it lives in the same list and some chart versions do not set it:
+      # without it, triggers answer 502.
+      - name: TRIGGER_SERVER_ENDPOINT
+        value: "http://<release>-fleet-trigger-server.<namespace>.svc.cluster.local:1990"
+      # Optional: governance changes (ABAC policies, resource tags) reach the portal in
+      # about 30 seconds instead of up to an hour. Defaults: 3600 / 3600 / 60.
+      - name: ABAC_POLICIES_CACHE_TTL_SEC
+        value: "30"
+      - name: RESOURCE_TAGS_CACHE_TTL_SEC
+        value: "30"
+      - name: AUTHZ_RESULT_CACHE_TTL_SEC
+        value: "15"
+      # Only for an MCP server or OAuth provider on a private IP address. Set it also on hostBackend
+      # (above) and backend (below). Do not put it in commonEnv: the chart sets it on the Fleet pods,
+      # and the render stops with "Duplicate keys detected". docs/mcp-servers.md#private-networks
+      # - name: SSRF_ALLOW_PRIVATE_IPS_MCP_SERVERS
+      #   value: "true"
+
+# backend:
+#   deployment:
+#     extraEnv:             # Helm replaces lists: copy your existing backend entries into this list
+#       - name: SSRF_ALLOW_PRIVATE_IPS_MCP_SERVERS
+#         value: "true"
+
+# Who may create agents and skills: on LangSmith 0.17 as tested (0.17.33), LangSmith did not
+# enforce it, so the portal gates Build by role instead (UX only). Later 0.17 releases add
+# Fleet RBAC, which this starter has not been tested with: see "Enable Fleet RBAC on
+# self-hosted" in the LangSmith docs.
+#
+# Computer (LangSmith Sandboxes) is optional. Enable it as the LangSmith self-hosting docs
+# describe for your cloud; Fleet finds it through the chart's own settings, with nothing
+# portal-specific to add here.

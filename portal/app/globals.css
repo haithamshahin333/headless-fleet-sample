@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LangChain brand tokens. `--brand` means "the brand blue that is
+   legible on THIS theme's surface" — the light and dark values are NOT
+   interchangeable, so do not collapse them.
+   ───────────────────────────────────────────────────────────────────────── */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    /* Geist for everything the app says in its own voice. Mono is opt-in, and
+       only where a monospace grid carries meaning: dcode's output tail, the
+       artifact Code tab, inline `code`, and filenames that failed to linkify. */
+    --font-heading: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-sans: var(--font-sans);
+    --color-brand: var(--brand);
+    --color-brand-foreground: var(--brand-foreground);
+    --color-brand-subtle: var(--brand-subtle);
+    --color-brand-border: var(--brand-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    /* Page canvas behind cards, and two elevations. Surfaces read as layers, not boxes. */
+    --color-canvas: var(--canvas);
+    --shadow-card: var(--elev-1);
+    --shadow-pop: var(--elev-2);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --canvas: oklch(0.985 0.004 250);
+    --elev-1: 0 1px 2px oklch(0.25 0.03 258 / 0.05), 0 2px 8px -2px oklch(0.25 0.03 258 / 0.07);
+    --elev-2: 0 2px 4px oklch(0.25 0.03 258 / 0.05), 0 14px 32px -10px oklch(0.25 0.03 258 / 0.18);
+    --foreground: oklch(0.128 0.0234 258.43);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.128 0.0234 258.43);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.128 0.0234 258.43);
+    --primary: oklch(0.5499 0.1905 256.38);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.9593 0.0217 239.42);
+    --secondary-foreground: oklch(0.128 0.0234 258.43);
+    --muted: oklch(0.9805 0.0108 234.81);
+    --muted-foreground: oklch(0.3933 0.0737 250.81);
+    --accent: oklch(0.9593 0.0217 239.42);
+    --accent-foreground: oklch(0.128 0.0234 258.43);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.9231 0.0230 252.18);
+    --input: oklch(0.9231 0.0230 252.18);
+    --ring: oklch(0.5499 0.1905 256.38);
+    /* `--brand-subtle` is what the approval gate is painted in. */
+    --brand: oklch(0.5499 0.1905 256.38);
+    --brand-foreground: oklch(1 0 0);
+    --brand-subtle: oklch(0.5499 0.1905 256.38 / 6%);
+    --brand-border: oklch(0.8858 0.0350 248.22);
+    --chart-1: oklch(0.5499 0.1905 256.38);
+    --chart-2: oklch(0.6600 0.1500 250.00);
+    --chart-3: oklch(0.3933 0.0737 250.81);
+    --chart-4: oklch(0.8058 0.1071 242.29);
+    --chart-5: oklch(0.2420 0.0425 265.70);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.9805 0.0108 234.81);
+    --sidebar-foreground: oklch(0.128 0.0234 258.43);
+    --sidebar-primary: oklch(0.5499 0.1905 256.38);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.9593 0.0217 239.42);
+    --sidebar-accent-foreground: oklch(0.5499 0.1905 256.38);
+    --sidebar-border: oklch(0.9231 0.0230 252.18);
+    --sidebar-ring: oklch(0.5499 0.1905 256.38);
+}
+
+.dark {
+    --background: oklch(0.128 0.0234 258.43);
+    --canvas: oklch(0.128 0.0234 258.43);
+    --elev-1: 0 1px 2px oklch(0 0 0 / 0.35);
+    --elev-2: 0 2px 4px oklch(0 0 0 / 0.3), 0 14px 32px -10px oklch(0 0 0 / 0.6);
+    --foreground: oklch(0.9805 0.0108 234.81);
+    --card: oklch(0.2420 0.0425 265.70);
+    --card-foreground: oklch(0.9805 0.0108 234.81);
+    --popover: oklch(0.2420 0.0425 265.70);
+    --popover-foreground: oklch(0.9805 0.0108 234.81);
+    --primary: oklch(0.8058 0.1071 242.29);
+    --primary-foreground: oklch(0.128 0.0234 258.43);
+    --secondary: oklch(0.2420 0.0425 265.70);
+    --secondary-foreground: oklch(0.9805 0.0108 234.81);
+    --muted: oklch(0.1831 0.0309 263.38);
+    --muted-foreground: oklch(0.7000 0.0533 257.68);
+    --accent: oklch(0.3431 0.0541 265.23);
+    --accent-foreground: oklch(0.9805 0.0108 234.81);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(0.8058 0.1071 242.29 / 16%);
+    --input: oklch(0.8058 0.1071 242.29 / 22%);
+    --ring: oklch(0.8058 0.1071 242.29);
+    --brand: oklch(0.8058 0.1071 242.29);
+    --brand-foreground: oklch(0.128 0.0234 258.43);
+    --brand-subtle: oklch(0.8058 0.1071 242.29 / 12%);
+    --brand-border: oklch(0.8058 0.1071 242.29 / 30%);
+    --chart-1: oklch(0.8058 0.1071 242.29);
+    --chart-2: oklch(0.8416 0.0780 241.91);
+    --chart-3: oklch(0.7000 0.0533 257.68);
+    --chart-4: oklch(0.5499 0.1905 256.38);
+    --chart-5: oklch(0.3431 0.0541 265.23);
+    --sidebar: oklch(0.2420 0.0425 265.70);
+    --sidebar-foreground: oklch(0.9805 0.0108 234.81);
+    --sidebar-primary: oklch(0.8058 0.1071 242.29);
+    --sidebar-primary-foreground: oklch(0.128 0.0234 258.43);
+    --sidebar-accent: oklch(0.3431 0.0541 265.23);
+    --sidebar-accent-foreground: oklch(0.8058 0.1071 242.29);
+    --sidebar-border: oklch(0.8058 0.1071 242.29 / 16%);
+    --sidebar-ring: oklch(0.8058 0.1071 242.29);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+  html { @apply font-sans antialiased; }
+}
+
+/* Transform/opacity only, so neither animation triggers layout. `gate-in` is slower
+   because the approval card is the one moment in the app that should announce itself. */
+@keyframes message-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes gate-in { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: none; } }
+@utility animate-message-in { animation: message-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@utility animate-gate-in { animation: gate-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }

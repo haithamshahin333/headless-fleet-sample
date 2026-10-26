@@ -1,0 +1,59 @@
+# `helm test <release>`: checks LangSmith, the identity provider's discovery document and
+# the portal from inside the cluster, then prints the redirect URI to register.
+# Read the result with: kubectl logs <release>-headless-fleet-portal-preflight
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "portal.fullname" . }}-preflight
+  # Not the portal's selector labels: the Service must never route to this pod.
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: preflight
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  restartPolicy: Never
+  automountServiceAccountToken: false
+  {{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: preflight
+      image: {{ include "portal.image" . | quote }}
+      imagePullPolicy: {{ .Values.image.pullPolicy }}
+      command: ["node", "preflight.mjs"]
+      envFrom:
+        - configMapRef:
+            name: {{ include "portal.fullname" . }}
+      env:
+        - name: PORTAL_SERVICE_URL
+          value: "http://{{ include "portal.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}"
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: [ALL]
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+  {{- with .Values.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

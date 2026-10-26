@@ -1,0 +1,43 @@
+# Okta (UNTESTED). Copy to my-values.yaml, replace every <…>, then, from the repo root:
+#   helm install portal chart/headless-fleet-portal -n agent-portal -f my-values.yaml --wait
+# Setup in Okta: docs/identity-provider.md#okta
+
+image:
+  repository: <registry>/headless-fleet-portal
+  tag: "0.1.0"
+
+portal:
+  url: https://<portal-host>
+
+langsmith:
+  apiUrl: https://<langsmith-host>/api
+  uiUrl: https://<langsmith-host>
+
+oidc:
+  # A CUSTOM authorization server: the org server's access tokens are not for other APIs.
+  issuer: https://<org>.okta.com/oauth2/<authorization-server-id>
+  clientId: <portal-client-id>
+  # The authorization server's Audience setting.
+  audience: <langsmith-audience>
+  # Must match what LangSmith stored at SSO login. Okta's custom server sets the access
+  # token's `sub` to the user's login by default: change it to the user id (see the docs).
+  subjectClaim: sub
+
+secrets:
+  existingSecret: headless-fleet-portal
+
+roles:
+  claim: groups
+  builders: [portal-builders, portal-platform]
+  admins: [portal-platform]
+
+branding:
+  signInLabel: Okta
+
+ingress:
+  className: <ingress-class>
+  # Replace the {} below with your controller's settings, for example:
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: <issuer>
+  #     nginx.ingress.kubernetes.io/proxy-body-size: "8m"   # skill uploads; ingress-nginx allows 1 MB
+  annotations: {}

@@ -1,0 +1,115 @@
+# Keycloak (realm mcp-test) and the whoami MCP server, for a test only. README.md tells you how to apply this file.
+# Replace <langsmith-host> and <registry> first. Nothing here is exposed outside the cluster: a browser gets to Keycloak
+# through kubectl port-forward and an /etc/hosts line.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: mcp-test
+  labels: { app: keycloak }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: keycloak } }
+  template:
+    metadata:
+      labels: { app: keycloak }
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, seccompProfile: { type: RuntimeDefault } }
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:26.8.0
+        # Dev mode: HTTP, and the data is lost when the pod is replaced. A new pod loads realm.json again. Test only.
+        args: ["start-dev", "--import-realm"]
+        env:
+        # One hostname for every caller: LangSmith (cluster DNS) and the browser (/etc/hosts + port-forward).
+        # Then iss is the same in every token.
+        - { name: KC_HOSTNAME, value: "http://keycloak.mcp-test.svc:8080" }
+        - { name: KC_HEALTH_ENABLED, value: "true" }
+        - { name: KC_BOOTSTRAP_ADMIN_USERNAME, value: admin }
+        - { name: KC_BOOTSTRAP_ADMIN_PASSWORD, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: admin-password } } }
+        # Read by the ${...} placeholders in realm.json
+        - { name: KC_FLEET_CLIENT_SECRET, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: fleet-client-secret } } }
+        - { name: KC_SMOKE_CLIENT_SECRET, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: smoke-client-secret } } }
+        - { name: KC_ALICE_PASSWORD, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: alice-password } } }
+        - { name: KC_BOB_PASSWORD, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: bob-password } } }
+        - { name: LANGSMITH_CALLBACK, value: "https://<langsmith-host>/host-oauth-callback/keycloak-mcp" }
+        ports:
+        - { name: http, containerPort: 8080 }
+        - { name: management, containerPort: 9000 }
+        readinessProbe:
+          httpGet: { path: /health/ready, port: management }
+          periodSeconds: 10
+          failureThreshold: 30
+        resources:
+          requests: { cpu: 250m, memory: 768Mi }
+          limits: { cpu: "1", memory: 1536Mi }
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: { drop: ["ALL"] }
+        volumeMounts:
+        - { name: realm, mountPath: /opt/keycloak/data/import, readOnly: true }
+      volumes:
+      - name: realm
+        configMap: { name: keycloak-realm }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: mcp-test
+spec:
+  selector: { app: keycloak }
+  ports:
+  - { name: http, port: 8080, targetPort: http }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp
+  namespace: mcp-test
+  labels: { app: mcp }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: mcp } }
+  template:
+    metadata:
+      labels: { app: mcp }
+    spec:
+      automountServiceAccountToken: false
+      # imagePullSecrets: [{ name: <pull-secret> }]     # for a private registry
+      securityContext: { runAsNonRoot: true, runAsUser: 1000, runAsGroup: 1000, seccompProfile: { type: RuntimeDefault } }
+      containers:
+      - name: mcp
+        image: <registry>/mcp-whoami:0.1.0
+        env:
+        - { name: OIDC_ISSUER, value: "http://keycloak.mcp-test.svc:8080/realms/mcp-test" }
+        - { name: MCP_AUDIENCE, value: mcp-server }
+        - { name: MCP_PUBLIC_URL, value: "http://mcp.mcp-test.svc:8000/mcp" }
+        ports:
+        - { name: http, containerPort: 8000 }
+        readinessProbe:
+          tcpSocket: { port: http }
+          periodSeconds: 5
+        resources:
+          requests: { cpu: 50m, memory: 128Mi }
+          limits: { cpu: 500m, memory: 256Mi }
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: { drop: ["ALL"] }
+        volumeMounts:
+        - { name: tmp, mountPath: /tmp }
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp
+  namespace: mcp-test
+spec:
+  selector: { app: mcp }
+  ports:
+  - { name: http, port: 8000, targetPort: http }

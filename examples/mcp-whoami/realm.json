@@ -1,0 +1,83 @@
+{
+  "realm": "mcp-test",
+  "displayName": "MCP test (throwaway)",
+  "enabled": true,
+  "sslRequired": "none",
+  "accessTokenLifespan": 300,
+  "clients": [
+    {
+      "clientId": "langsmith-fleet",
+      "name": "LangSmith Fleet (OAuth provider keycloak-mcp)",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${KC_FLEET_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "consentRequired": false,
+      "redirectUris": ["${LANGSMITH_CALLBACK}"],
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "protocolMappers": [
+        {
+          "name": "mcp-server audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "mcp-server",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "mcp-smoke",
+      "name": "In-cluster smoke test (client credentials)",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${KC_SMOKE_CLIENT_SECRET}",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "mcp-server audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "mcp-server",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "email": "alice@example.com",
+      "firstName": "Alice",
+      "lastName": "Test",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["offline_access"],
+      "credentials": [{ "type": "password", "value": "${KC_ALICE_PASSWORD}", "temporary": false }]
+    },
+    {
+      "username": "bob",
+      "email": "bob@example.com",
+      "firstName": "Bob",
+      "lastName": "Test",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["offline_access"],
+      "credentials": [{ "type": "password", "value": "${KC_BOB_PASSWORD}", "temporary": false }]
+    }
+  ]
+}

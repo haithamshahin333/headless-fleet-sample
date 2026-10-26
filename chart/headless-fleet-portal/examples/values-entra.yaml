@@ -1,0 +1,45 @@
+# Microsoft Entra ID (tested). Copy to my-values.yaml, replace every <…>, then, from the repo root:
+#   helm install portal chart/headless-fleet-portal -n agent-portal -f my-values.yaml --wait
+# Setup in Entra: docs/identity-provider.md#microsoft-entra-id
+
+image:
+  repository: <registry>/headless-fleet-portal
+  tag: "0.1.0"
+
+portal:
+  url: https://<portal-host>
+
+langsmith:
+  apiUrl: https://<langsmith-host>/api
+  uiUrl: https://<langsmith-host>
+
+oidc:
+  # Single tenant, v2 tokens. Must equal LangSmith's FLEET_EXTERNAL_AUTH_OIDC_ISSUER_URL.
+  issuer: https://login.microsoftonline.com/<tenant-id>/v2.0
+  # The PORTAL's app registration.
+  clientId: <portal-app-client-id>
+  # LangSmith's SSO app: its client ID is the audience of a v2 access token.
+  audience: <langsmith-app-client-id>
+  apiScope: api://<langsmith-app-client-id>/Fleet.Access
+  # Entra's `sub` differs per app; LangSmith stores `oid`.
+  subjectClaim: oid
+
+secrets:
+  existingSecret: headless-fleet-portal
+
+roles:
+  claim: roles
+  builders: [Portal.Builder, Portal.Platform]
+  admins: [Portal.Platform]
+
+branding:
+  name: Agent Portal
+  signInLabel: Microsoft
+
+ingress:
+  className: <ingress-class>
+  # Replace the {} below with your controller's settings, for example:
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: <issuer>
+  #     nginx.ingress.kubernetes.io/proxy-body-size: "8m"   # skill uploads; ingress-nginx allows 1 MB
+  annotations: {}

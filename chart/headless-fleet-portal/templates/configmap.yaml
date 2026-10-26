@@ -1,0 +1,28 @@
+{{- include "portal.validate" . -}}
+# Every non-secret setting. The portal reads them at startup and refuses to start, listing
+# the problems, if any is wrong. Secrets come from secrets.existingSecret (deployment.yaml).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "portal.fullname" . }}
+  labels:
+    {{- include "portal.labels" . | nindent 4 }}
+data:
+  AUTH_URL: {{ include "portal.url" . | quote }}
+  LANGSMITH_API_URL: {{ .Values.langsmith.apiUrl | quote }}
+  LANGSMITH_UI_URL: {{ .Values.langsmith.uiUrl | quote }}
+  OIDC_ISSUER: {{ .Values.oidc.issuer | quote }}
+  OIDC_CLIENT_ID: {{ .Values.oidc.clientId | quote }}
+  OIDC_AUDIENCE: {{ .Values.oidc.audience | quote }}
+  OIDC_API_SCOPE: {{ .Values.oidc.apiScope | quote }}
+  OIDC_AUDIENCE_PARAM: {{ .Values.oidc.audienceParam | quote }}
+  OIDC_SUBJECT_CLAIM: {{ .Values.oidc.subjectClaim | quote }}
+  OIDC_ROLES_CLAIM: {{ .Values.roles.claim | quote }}
+  OIDC_DISPLAY_NAME: {{ .Values.branding.signInLabel | quote }}
+  PORTAL_NAME: {{ .Values.branding.name | quote }}
+  PORTAL_BUILDER_ROLES: {{ join "," .Values.roles.builders | quote }}
+  PORTAL_ADMIN_ROLES: {{ join "," .Values.roles.admins | quote }}
+  LANGSMITH_ORG_ID: {{ .Values.advanced.orgId | quote }}
+  LANGSMITH_WORKSPACE_ID: {{ .Values.advanced.workspaceId | quote }}
+  PORTAL_TOKEN_MIN_TTL_SEC: {{ .Values.advanced.tokenMinTtlSec | quote }}
+  PORTAL_GRAPH_PROVIDER: {{ .Values.advanced.graphProvider | quote }}

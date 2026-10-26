@@ -1,0 +1,8 @@
+# Keep local settings and build output out of the image. .env* covers .env.local, which
+# holds real secrets during local development.
+.env*
+node_modules
+.next
+*.tsbuildinfo
+Dockerfile
+.dockerignore

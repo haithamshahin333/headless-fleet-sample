@@ -1,0 +1,165 @@
+# ════════════════════════════════════════════════════════════════════════════════
+#  Headless Fleet portal
+#
+#  Section 1 is YOUR ENVIRONMENT. Fill in every value marked REQUIRED. If any is
+#  missing, `helm install` stops and lists all of them. Section 2 is optional.
+#
+#  Start from an example instead of editing this file. From the repo root:
+#    cp chart/headless-fleet-portal/examples/values-entra.yaml my-values.yaml   (or -keycloak / -okta)
+#    helm install portal chart/headless-fleet-portal -n agent-portal -f my-values.yaml --wait
+#
+#  The README's "Your inputs" table says where each value comes from.
+# ════════════════════════════════════════════════════════════════════════════════
+
+# ── 1. YOUR ENVIRONMENT ───────────────────────────────────────────────────────────
+
+image:
+  # REQUIRED. Where you pushed the image built from portal/Dockerfile.
+  #   e.g. myregistry.azurecr.io/headless-fleet-portal
+  repository: ""
+  # The tag you pushed. Empty = the chart's appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+portal:
+  # REQUIRED. The URL people open, at the root of a host (no path), https://.
+  # The ingress host is taken from it. Register <url>/api/auth/callback/oidc as a
+  # redirect URI on the portal's app in your identity provider.
+  #   e.g. https://agents.example.com
+  url: ""
+
+langsmith:
+  # REQUIRED. Your self-hosted LangSmith API (0.17 or later), usually ending in /api.
+  # LangSmith must have Fleet's OIDC sign-in turned on: see langsmith/values-fleet-oidc.yaml.
+  #   e.g. https://langsmith.example.com/api
+  apiUrl: ""
+  # Optional. LangSmith's web UI, linked as "Admin in LangSmith" for roles.admins.
+  #   e.g. https://langsmith.example.com
+  uiUrl: ""
+
+oidc:
+  # REQUIRED. Your identity provider's issuer, exactly as its discovery document states
+  # it. Must equal LangSmith's FLEET_EXTERNAL_AUTH_OIDC_ISSUER_URL byte for byte.
+  #   Entra ID:  https://login.microsoftonline.com/<tenant-id>/v2.0
+  #   Keycloak:  https://keycloak.example.com/realms/<realm>
+  #   Okta:      https://<org>.okta.com/oauth2/<authorization-server-id>
+  issuer: ""
+  # REQUIRED. The portal's client (application) ID in your identity provider.
+  clientId: ""
+  # REQUIRED. The audience LangSmith accepts: the same value as LangSmith's
+  # FLEET_EXTERNAL_AUTH_OIDC_AUDIENCE. Every sign-in is checked against it, and the login
+  # page explains a mismatch instead of LangSmith answering 401 on every page.
+  audience: ""
+  # How the access token gets that audience. Depends on the provider:
+  #   Entra ID:       apiScope = api://<langsmith-app-client-id>/Fleet.Access
+  #   Auth0:          audienceParam = your API identifier
+  #   Keycloak, Okta: configured in the provider itself (audience mapper / authorization
+  #                   server); leave both empty
+  apiScope: ""
+  audienceParam: ""
+  # The claim LangSmith maps to a user: LangSmith's FLEET_EXTERNAL_AUTH_OIDC_SUBJECT_CLAIM.
+  # Entra ID: oid. Most others: sub.
+  subjectClaim: sub
+
+secrets:
+  # REQUIRED. The name of a Secret you create in the release namespace, with two keys:
+  #   oidc-client-secret   the portal's client secret from your identity provider
+  #   auth-secret          a random session key (openssl rand -base64 32)
+  #
+  #   kubectl create secret generic headless-fleet-portal -n <namespace> \
+  #     --from-literal=oidc-client-secret="$OIDC_CLIENT_SECRET" \
+  #     --from-literal=auth-secret="$(openssl rand -base64 32)"
+  #   (README step 4 shows how to set OIDC_CLIENT_SECRET without shell history.)
+  #
+  # The chart never holds secrets in values. After changing the Secret, restart the pod:
+  #   kubectl rollout restart deployment/<release>-headless-fleet-portal -n <namespace>
+  existingSecret: ""
+
+# ── 2. OPTIONAL ───────────────────────────────────────────────────────────────────
+
+# Who sees Build and Publish, and the "Admin in LangSmith" link. This is UX gating only:
+# LangSmith decides what each person can actually do. With no builders listed, Build and
+# Publish are turned off for everyone (the portal says so).
+roles:
+  # Where the roles are in the id_token, as a dot path:
+  #   roles (Entra app roles), groups (Okta), realm_access.roles (Keycloak)
+  claim: roles
+  # e.g. [Portal.Builder, Portal.Platform]
+  builders: []
+  # e.g. [Portal.Platform]
+  admins: []
+
+branding:
+  # Shown in the header, the tab title and the sign-in page.
+  name: Agent Portal
+  # The sign-in button reads "Sign in with <signInLabel>". Empty = "your organization".
+  signInLabel: ""
+
+# Exposes portal.url. Works with any Ingress controller; set className for yours.
+ingress:
+  enabled: true
+  # Empty = the cluster's default IngressClass.
+  className: ""
+  # Controller-specific settings. Two things the portal needs from any proxy:
+  #   - request bodies up to 8 MB (skill uploads). ingress-nginx allows 1 MB by default:
+  #       nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+  #   - no response buffering for text/event-stream (chat). The portal sends
+  #     X-Accel-Buffering: no and a keep-alive every 15 s, so most proxies need nothing.
+  # With cert-manager, add your issuer to get a certificate automatically:
+  #       cert-manager.io/cluster-issuer: letsencrypt-prod
+  annotations: {}
+  tls:
+    enabled: true
+    # The TLS Secret for the host. Empty = <release>-headless-fleet-portal-tls (cert-manager
+    # creates it when you add its annotation; otherwise create it yourself).
+    secretName: ""
+
+# Gateway API alternative to the Ingress. Set ingress.enabled=false when you use this.
+httpRoute:
+  enabled: false
+  # e.g. [{ name: my-gateway, namespace: gateway-system, sectionName: https }]
+  parentRefs: []
+
+# One replica on purpose: the activity log is kept in memory per pod, and some identity
+# providers revoke a refresh token once it is used, which makes concurrent refreshes from
+# several pods unsafe. Sessions live in an encrypted cookie, so a restart signs no one out.
+replicaCount: 1
+
+# Pull secrets for a private registry, e.g. [{ name: my-registry-credentials }]
+imagePullSecrets: []
+
+advanced:
+  # Skip LangSmith org discovery.
+  orgId: ""
+  # The workspace to fall back to when LangSmith does not list the user's workspaces.
+  workspaceId: ""
+  # Refresh the access token when fewer seconds than this remain.
+  tokenMinTtlSec: 300
+  # Fleet OAuth provider used by the Computer → Microsoft Graph access profile.
+  graphProvider: microsoft-oauth-provider
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 512Mi
+
+serviceAccount:
+  create: true
+  # Empty = the release's full name.
+  name: ""
+  annotations: {}
+
+# Extra environment variables for the portal container, e.g. [{ name: NODE_OPTIONS, value: "--max-old-space-size=384" }]
+extraEnv: []
+
+podAnnotations: {}
+podLabels: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

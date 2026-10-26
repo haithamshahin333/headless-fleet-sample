@@ -1,0 +1,43 @@
+# Keycloak (UNTESTED with this portal: LangSmith's side has been run with Keycloak).
+# Copy to my-values.yaml, replace every <…>, then, from the repo root:
+#   helm install portal chart/headless-fleet-portal -n agent-portal -f my-values.yaml --wait
+# Setup in Keycloak: docs/identity-provider.md#keycloak
+
+image:
+  repository: <registry>/headless-fleet-portal
+  tag: "0.1.0"
+
+portal:
+  url: https://<portal-host>
+
+langsmith:
+  apiUrl: https://<langsmith-host>/api
+  uiUrl: https://<langsmith-host>
+
+oidc:
+  # Keycloak puts the URL the client used into `iss`: pin KC_HOSTNAME so it is the same
+  # for browsers, the portal and LangSmith.
+  issuer: https://<keycloak-host>/realms/<realm>
+  clientId: <portal-client-id>
+  # The value your audience mapper adds to access tokens (Keycloak's default is `account`).
+  audience: <langsmith-audience>
+  subjectClaim: sub
+
+secrets:
+  existingSecret: headless-fleet-portal
+
+roles:
+  claim: realm_access.roles
+  builders: [portal-builder, portal-platform]
+  admins: [portal-platform]
+
+branding:
+  signInLabel: Keycloak
+
+ingress:
+  className: <ingress-class>
+  # Replace the {} below with your controller's settings, for example:
+  #   annotations:
+  #     cert-manager.io/cluster-issuer: <issuer>
+  #     nginx.ingress.kubernetes.io/proxy-body-size: "8m"   # skill uploads; ingress-nginx allows 1 MB
+  annotations: {}

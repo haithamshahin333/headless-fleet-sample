@@ -1,0 +1,30 @@
+The portal is installed as {{ include "portal.fullname" . }} in namespace {{ .Release.Namespace }}.
+
+1. Register this redirect URI on the portal's app in your identity provider
+   (exactly as shown, with no trailing slash):
+
+     {{ include "portal.url" . }}/api/auth/callback/oidc
+
+2. Check LangSmith, the identity provider and the portal from inside the cluster:
+
+     helm test {{ .Release.Name }} -n {{ .Release.Namespace }} --logs
+
+3. Open {{ include "portal.url" . }} and sign in.
+{{- if not .Values.roles.builders }}
+
+NOTE: roles.builders is empty, so Build and Publish are turned off for everyone.
+      Set it to the role values your identity provider issues, e.g. [Portal.Builder].
+{{- end }}
+{{- if not .Values.ingress.enabled }}{{ if not .Values.httpRoute.enabled }}
+
+NOTE: ingress and httpRoute are both off. Route {{ include "portal.url" . }} to
+      service {{ include "portal.fullname" . }}:{{ .Values.service.port }} yourself, or for a
+      localhost URL:
+        kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "portal.fullname" . }} {{ (urlParse .Values.portal.url).host | regexFind "[0-9]+$" | default "3000" }}:{{ .Values.service.port }}
+{{- end }}{{ end }}
+
+If the pod does not start, its log lists every configuration problem:
+
+     kubectl logs -n {{ .Release.Namespace }} deploy/{{ include "portal.fullname" . }}
+
+Sign-in problems: docs/troubleshooting.md.

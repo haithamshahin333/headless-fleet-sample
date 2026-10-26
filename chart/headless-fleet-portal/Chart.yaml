@@ -1,0 +1,8 @@
+apiVersion: v2
+name: headless-fleet-portal
+description: A governed agent portal on the LangSmith Headless Fleet API. Users sign in with your OIDC provider and act as themselves in self-hosted LangSmith.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.27.0-0"
+keywords: [langsmith, fleet, agents, oidc]

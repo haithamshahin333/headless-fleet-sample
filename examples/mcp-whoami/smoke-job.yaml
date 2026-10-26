@@ -1,0 +1,43 @@
+# In-cluster check of Keycloak + the MCP server, without LangSmith: a client-credentials token from the mcp-smoke
+# client, then whoami with it and tools/list without it. Prints HTTP codes and whoami's JSON, never the token.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: smoke
+  namespace: mcp-test
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, runAsUser: 100, seccompProfile: { type: RuntimeDefault } }
+      containers:
+      - name: smoke
+        image: curlimages/curl:8.16.0
+        env:
+        - { name: SMOKE_SECRET, valueFrom: { secretKeyRef: { name: keycloak-secrets, key: smoke-client-secret } } }
+        securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: ["ALL"] } }
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -eu
+          KC=http://keycloak.mcp-test.svc:8080/realms/mcp-test/protocol/openid-connect/token
+          MCP=http://mcp.mcp-test.svc:8000/mcp
+          TOK=$(curl -s -u "mcp-smoke:$SMOKE_SECRET" -d grant_type=client_credentials "$KC" \
+            | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+          [ -n "$TOK" ] && echo "keycloak token: ok" || { echo "FAIL: no token from Keycloak"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$MCP" \
+            -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}')
+          echo "tools/list without a token: HTTP $code (want 401)"
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$MCP" -H 'Authorization: Bearer not-a-jwt' \
+            -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}')
+          echo "tools/list with a bad token: HTTP $code (want 401)"
+          echo "whoami with the token:"
+          curl -s -X POST "$MCP" -H "Authorization: Bearer $TOK" \
+            -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"whoami","arguments":{}}}' \
+            | sed -n 's/^data: //p'
